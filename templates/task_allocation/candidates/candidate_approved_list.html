@@ -1,0 +1,78 @@
+{% extends '../base.html' %}
+{% block title %}Approved Candidates{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center">
+  <h2>Candidates</h2>
+  <a href="{% url 'add_candidate' %}" class="btn btn-success">Add Candidate</a>
+</div>
+
+<table class="table table-striped mt-3">
+  <thead class="table-dark">
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>New Role</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for approved_candidate in approved_candidates %}
+    <tr>
+      <td>{{ approved_candidate.candidate.first_name }} {{ approved_candidate.candidate.last_name }}</td>
+      <td>{{ approved_candidate.candidate.email }}</td>
+      <td>{{ approved_candidate.candidate.role }}</td>
+      <td>
+        <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"
+          onclick="showApprovedCandidateDetails({{ approved_candidate.id }})">View</button>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3" class="text-center">No candidates found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Staff Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function showApprovedCandidateDetails(employeeId) {
+    console.log("employeeId", employeeId);
+    fetch(`/staff/${employeeId}/`)
+      .then(response => response.json())
+      .then(data => {
+        document.querySelector('.modal-title').innerText = data.first_name + ' ' + data.last_name;
+        document.querySelector('.modal-body').innerHTML = `
+          <p><strong>Full Name:</strong> ${data.first_name} ${data.last_name}</p>
+          <p><strong>Email:</strong> ${data.email}</p>
+          <p><strong>Phone:</strong> ${data.phone}</p>
+          <p><strong>Date of Birth:</strong> ${data.dob}</p>
+          <p><strong>Role:</strong> ${data.role}</p>
+          
+          <p class="mt-5"><strong>Departement Details</strong></p>
+          <hr class="mt-0 mb-2">
+          <p><strong>Departement:</strong> ${data.departement_name}</p>
+          <p><strong>Departement Tele:</strong> ${data.departement_phone}</p>
+          <p><strong>Departement Room No.:</strong> ${data.departement_room_number}</p>
+
+          <p><strong>education_degree:</strong> ${data.education_degree}</p>
+        `;
+      });
+  }
+</script>
+{% endblock %}

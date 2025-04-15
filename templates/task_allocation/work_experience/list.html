@@ -1,0 +1,40 @@
+{% extends '../base.html' %}
+{% block title %}Work Experience - {{ candidate.first_name }} {{ candidate.last_name }}
+{% endblock %} {% block content %}
+<h2>
+  Work Experience for {{ candidate.first_name }} {{ candidate.last_name }}
+</h2>
+<a href="{% url 'add_work_experience' candidate.id %}" class="btn btn-success mb-3">Add Work Experience</a>
+
+<table class="table table-striped">
+  <thead class="table-dark">
+    <tr>
+      <th>Job Title</th>
+      <th>Company</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for experience in experiences %}
+    <tr>
+      <td>{{ experience.job_title }}</td>
+      <td>{{ experience.company_name }}</td>
+      <td>{{ experience.start_date }}</td>
+      <td>
+        {% if experience.end_date %}
+        {{ experience.end_date }}
+        {% else %}
+        Present
+        {%endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="4" class="text-center">No work experience found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{% url 'candidate_list' %}" class="btn btn-secondary">Back to Candidates</a>
+{% endblock %}

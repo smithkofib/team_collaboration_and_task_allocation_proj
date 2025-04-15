@@ -1,0 +1,41 @@
+{% extends '../base.html' %}
+{% block title %}
+Education - {{ candidate.first_name }} {{ candidate.last_name }}
+{% endblock %}
+{% block content %}
+<h2>
+  Education Details for {{ candidate.first_name }} {{ candidate.last_name }}
+</h2>
+<a href="{% url 'add_education' candidate.id %}" class="btn btn-success mb-3">Add Education</a>
+<table class="table table-striped">
+  <thead class="table-dark">
+    <tr>
+      <th>Institution</th>
+      <th>Degree</th>
+      <th>Field of Study</th>
+      <th>Years</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for edu in education %}
+    <tr>
+      <td>{{ edu.institution_name }}</td>
+      <td>{{ edu.degree }}</td>
+      <td>{{ edu.field_of_study }}</td>
+      <td>
+        {{ edu.start_year }} - {% if edu.end_year %}
+        {{ edu.end_year }}
+        {% else %}
+        Present
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="4" class="text-center">No education records found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="{% url 'candidate_list' %}" class="btn btn-secondary">Back to Candidates</a>
+{% endblock %}
